@@ -1,0 +1,51 @@
+﻿<Page x:Class="RestarauntApp.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:RestarauntApp"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="MainPage">
+
+    <Grid x:Name="MainGrid">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="0.3*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel x:Name="AprovedPanel" Grid.Column="0" >
+
+            <Label FontWeight="DemiBold" FontSize="18" Content="Утвержденные блюда"></Label>
+
+            <ListBox x:Name="ListBox1" FontSize="18" Margin="10" d:ItemsSource="{d:SampleData ItemCount=4}"/>
+
+
+            <ListBox x:Name="ListBox2" FontSize="18" Margin="10" d:ItemsSource="{d:SampleData ItemCount=4}"/>
+            <ListBox x:Name="ListBox3" FontSize="18" Margin="10" d:ItemsSource="{d:SampleData ItemCount=4}"/>
+        </StackPanel>
+        <StackPanel Width="40" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Click="onRightButton" Height="30" Margin="5" Content="▶"></Button>
+            <Button Click="onLeftButton" Height="30" Margin="5" Content="◀"></Button>
+        </StackPanel>
+
+        <StackPanel x:Name="NotAprovedPanel" Grid.Column="2">
+            <Label FontWeight="DemiBold" FontSize="18" Content="Неутвержденные блюда"></Label>
+            <ListBox x:Name="ListBox4" FontSize="18" Margin="10" d:ItemsSource="{d:SampleData ItemCount=4}"/>
+            <ListBox x:Name="ListBox5" FontSize="18" Margin="10" d:ItemsSource="{d:SampleData ItemCount=4}"/>
+            <ListBox x:Name="ListBox6" FontSize="18" Margin="10" d:ItemsSource="{d:SampleData ItemCount=4}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="3">
+            <Label FontWeight="DemiBold" HorizontalAlignment="Center" FontSize="18" Content="Меню"></Label>
+            <Button Click="OnOpenIngridientsList" Margin="10" FontSize="18" Content="Ингридиенты"></Button>
+            <Button Click="OnEditButton" Margin="10" FontSize="18" Content="Редактировать"></Button>
+            <Button Click="OnDeleteButton" Margin="10" FontSize="18" Content="Удалить"></Button>
+            <Button Click="OnCreateButton" Margin="10" FontSize="18" Content="Создать"></Button>
+        </StackPanel>
+
+    </Grid>
+</Page>
