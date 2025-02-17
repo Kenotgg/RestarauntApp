@@ -31,11 +31,16 @@ namespace RestarauntApp
                     notAddedIngridientsCollection.Add(ing);
                 }
                 addedIngridientsCollection.Clear();
-                var ingridentsInDish = db.DishLists.Where(dl => dl.DishId == PageController._dishListInfo.ID).Select(dl => dl.IngridientId).ToList();
 
-                foreach (var ing in db.Ingridients.Where(i => ingridentsInDish.Contains(i.Id)))
+                var ingridentsInDish = db.DishLists.Where(dl => dl.DishId == PageController._dishListInfo.ID).ToList();
+                foreach (var dishList in ingridentsInDish)
                 {
-                    addedIngridientsCollection.Add(ing);
+                    var ing = db.Ingridients.Find(dishList.IngridientId);
+                    if (ing != null) 
+                    {
+                        addedIngridientsCollection.Add(ing);
+                    }
+                    
                 }
                
                 AddedProductBox.ItemsSource = addedIngridientsCollection;
