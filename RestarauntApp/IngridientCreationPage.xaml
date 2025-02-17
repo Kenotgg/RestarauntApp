@@ -14,32 +14,47 @@
             <ColumnDefinition ></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0">
-            <ListBox Margin="25 10 25 0 " Height="390" FontSize="18" d:ItemsSource="{d:SampleData ItemCount=4}">
+            <ListBox x:Name="ProductsBox" Margin="25 10 25 0 " Height="320" FontSize="18" ItemsSource="{Binding Ingridients}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="5">
+                            <TextBlock FontSize="16" Text="{Binding Path=Title}" HorizontalAlignment="Left" FontWeight="DemiBold" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="16" Text="Б:"></TextBlock>
+                                <TextBlock FontSize="16" Text="{Binding Path=Proteins}" HorizontalAlignment="Center" />
+                                <TextBlock FontSize="16" Text=" Ж:"></TextBlock>
+                                <TextBlock FontSize="16" Text="{Binding Path=Fats}" HorizontalAlignment="Center" />
+                                <TextBlock FontSize="16" Text=" У:"></TextBlock>
+                                <TextBlock FontSize="16" Text="{Binding Path=Carbohydrates}" HorizontalAlignment="Center" />
+                            </StackPanel>
+                           
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
             </ListBox>
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <Button FontSize="18" Margin="10" Width="120" Content="Удалить" Height="30"></Button>
-                <Button FontSize="18"  Margin="10" Width="120" Content="Создать" Height="30"></Button>
+                <Button Click="OnDeleteProduct" FontSize="18" Margin="10" Width="120" Content="Удалить" Height="30"></Button>
             </StackPanel>
         </StackPanel>
-        <StackPanel Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25">
+        <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="25">
             <Label FontSize="16" Content="Введите название ингридиента:"></Label>
-            <TextBox Margin="0 0 0 5" Grid.Column="1" Background="White" Width="250" Height="30"/>
+            <TextBox x:Name="ProductNameBox" Margin="0 0 0 5" Grid.Column="1" Background="White" Width="250" Height="30"/>
             <StackPanel Orientation="Horizontal">
                 <StackPanel Margin="0 0 10 0">
                     <Label HorizontalAlignment="Center" FontSize="18" Content="Б"></Label>
-                    <TextBox Grid.Column="1" Background="White" Width="80" Height="30"/>
+                    <TextBox x:Name="ProteinBox" Grid.Column="1" Background="White" Width="80" Height="30"/>
                 </StackPanel>
                 <StackPanel Margin="0 0 0 0">
                     <Label HorizontalAlignment="Center" FontSize="18" Content="Ж"></Label>
-                    <TextBox Grid.Column="1" Background="White" Width="80" Height="30"/>
+                    <TextBox x:Name="FatsBox" Grid.Column="1" Background="White" Width="80" Height="30"/>
                 </StackPanel>
                 <StackPanel Margin="10 0 0 0">
                     <Label HorizontalAlignment="Center" FontSize="18" Content="У"></Label>
-                    <TextBox Grid.Column="1" Background="White" Width="80" Height="30"/>
+                    <TextBox x:Name="CarbohydratesBox" Grid.Column="1" Background="White" Width="80" Height="30"/>
                 </StackPanel>
                 
             </StackPanel>
-            <Button Margin="0 15 0 0" Height="30" FontSize="18" Content="Сохранить"></Button>
+            <Button Click="OnSaveProduct" Margin="0 15 0 0" Height="30" FontSize="18" Content="Сохранить"></Button>
         </StackPanel>
     </Grid>
 </Page>

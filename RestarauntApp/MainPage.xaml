@@ -17,34 +17,91 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <StackPanel x:Name="AprovedPanel" Grid.Column="0" >
+
+        
+
+        <StackPanel Grid.Column="0" >
 
             <Label FontWeight="DemiBold" FontSize="18" Content="Утвержденные блюда"></Label>
-
-            <ListBox x:Name="ListBox1" FontSize="18" Margin="10" d:ItemsSource="{d:SampleData ItemCount=4}"/>
-
-
+            <ListBox SelectionChanged="AprovedDishesListBox_SelectionChanged" Height="320" x:Name="AprovedDishesListBox">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock FontSize="16" FontWeight="DemiBold" Text="{Binding Path = Title}"></TextBlock>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Вес: "></TextBlock>
+                                <TextBlock Text="{Binding Path = Weight}"></TextBlock>
+                            </StackPanel>
+                            <StackPanel  Orientation="Horizontal">
+                                <TextBlock Text="ККАЛ: "></TextBlock>
+                                <TextBlock Text="{Binding Path = Kcal}"></TextBlock>
+                            </StackPanel>
+                            <StackPanel  Orientation="Horizontal">
+                                <TextBlock Text="БЖУ:: "></TextBlock>
+                                <TextBlock Text="{Binding Path = Proteins}"></TextBlock>
+                                <TextBlock Text=" "></TextBlock>
+                                <TextBlock Text="{Binding Path = Fats}"></TextBlock>
+                                <TextBlock Text=" "></TextBlock>
+                                <TextBlock Text="{Binding Path = Cabohydrates}"></TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <!--<ListBox x:Name="ListBox1" FontSize="18" Margin="10" d:ItemsSource="{d:SampleData ItemCount=4}"/>
             <ListBox x:Name="ListBox2" FontSize="18" Margin="10" d:ItemsSource="{d:SampleData ItemCount=4}"/>
-            <ListBox x:Name="ListBox3" FontSize="18" Margin="10" d:ItemsSource="{d:SampleData ItemCount=4}"/>
+            <ListBox x:Name="ListBox3" FontSize="18" Margin="10" d:ItemsSource="{d:SampleData ItemCount=4}"/>-->
         </StackPanel>
-        <StackPanel Width="40" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Click="onRightButton" Height="30" Margin="5" Content="▶"></Button>
-            <Button Click="onLeftButton" Height="30" Margin="5" Content="◀"></Button>
+        <StackPanel Width="40" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 150 0 0">
+            <Button Click="OnRightButton" Height="30" Margin="5" Content="▶"></Button>
+            <Button Click="OnLeftButton" Height="30" Margin="5" Content="◀"></Button>
         </StackPanel>
+        <!--<ListBox Grid.Column ="2" x:Name="NotAllowedDishes">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
 
-        <StackPanel x:Name="NotAprovedPanel" Grid.Column="2">
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>-->
+        <StackPanel Grid.Column="2">
             <Label FontWeight="DemiBold" FontSize="18" Content="Неутвержденные блюда"></Label>
-            <ListBox x:Name="ListBox4" FontSize="18" Margin="10" d:ItemsSource="{d:SampleData ItemCount=4}"/>
+            <ListBox SelectionChanged="NotAprovedDishesListBox_SelectionChanged"  Height="320" x:Name="NotAprovedDishesListBox">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock FontSize="16" FontWeight="DemiBold" Text="{Binding Path = Title}"></TextBlock>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Вес: "></TextBlock>
+                                <TextBlock Text="{Binding Path = Weight}"></TextBlock>
+                                <TextBlock Text="г"></TextBlock>
+                            </StackPanel>
+                            <StackPanel  Orientation="Horizontal">
+                                <TextBlock Text="ККАЛ: "></TextBlock>
+                                <TextBlock Text="{Binding Path = Kcal}"></TextBlock>
+                            </StackPanel>
+                            <StackPanel  Orientation="Horizontal">
+                                <TextBlock Text="БЖУ: "></TextBlock>
+                                <TextBlock Text="{Binding Path = Proteins}"></TextBlock>
+                                <TextBlock Text=" "></TextBlock>
+                                <TextBlock Text="{Binding Path = Fats}"></TextBlock>
+                                <TextBlock Text=" "></TextBlock>
+                                <TextBlock Text="{Binding Path = Cabohydrates}"></TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <!--<ListBox x:Name="ListBox4" FontSize="18" Margin="10" d:ItemsSource="{d:SampleData ItemCount=4}"/>
             <ListBox x:Name="ListBox5" FontSize="18" Margin="10" d:ItemsSource="{d:SampleData ItemCount=4}"/>
-            <ListBox x:Name="ListBox6" FontSize="18" Margin="10" d:ItemsSource="{d:SampleData ItemCount=4}"/>
+            <ListBox x:Name="ListBox6" FontSize="18" Margin="10" d:ItemsSource="{d:SampleData ItemCount=4}"/>-->
         </StackPanel>
 
         <StackPanel Grid.Column="3">
             <Label FontWeight="DemiBold" HorizontalAlignment="Center" FontSize="18" Content="Меню"></Label>
-            <Button Click="OnOpenIngridientsList" Margin="10" FontSize="18" Content="Ингридиенты"></Button>
-            <Button Click="OnEditButton" Margin="10" FontSize="18" Content="Редактировать"></Button>
-            <Button Click="OnDeleteButton" Margin="10" FontSize="18" Content="Удалить"></Button>
-            <Button Click="OnCreateButton" Margin="10" FontSize="18" Content="Создать"></Button>
+            <Button Click="OnEditIngridientButton" Margin="10" FontSize="18" Content="Ингридиенты"></Button>
+            <Button Click="OnEditDishButton" Margin="10" FontSize="18" Content="Редактировать"></Button>
+            <Button Click="OnDeleteDishButton" Margin="10" FontSize="18" Content="Удалить"></Button>
+            <Button Click="OnCreateDishButton" Margin="10" FontSize="18" Content="Создать"></Button>
         </StackPanel>
 
     </Grid>

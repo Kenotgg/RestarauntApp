@@ -1,8 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,9 +23,14 @@ namespace RestarauntApp
     /// <summary>
     /// Логика взаимодействия для MainPage.xaml
     /// </summary>
-    public partial class MainPage : Page
+    public partial class MainPage : Page, INotifyPropertyChanged
     {
-        List<ListBox> listBoxes = new List<ListBox>();
+        //List<ListBox> listBoxes = new List<ListBox>();
+
+        private ObservableCollection<DishListInfo> aprovedDishesCollection { get; set; } = new ObservableCollection<DishListInfo>();
+        private ObservableCollection<DishListInfo> notAprovedDishesCollection { get; set; } = new ObservableCollection<DishListInfo>();
+
+        //Я делаю перемещение блюд между листами, и логично сделать это за счет смены статуса, и обновления после этого страницы, также есть вариант, работать немного отдельно и просто прокидывать отображение за счет того, что каждый лист бокс привязан к своей ObservableCollection, ID конечно меняется, просто нет нужды обновлять страницу по нему
         public MainPage()
         {
             InitializeComponent();
@@ -32,21 +41,23 @@ namespace RestarauntApp
         {
             using (RestarauntContext db = new RestarauntContext())
             {
-                
-                //Выборка для списка блюд 
-                //var dishList = from dish in db.Dishes
-                //               join singleDishList in db.DishLists on dish.Id equals singleDishList.DishId
-                //               join ingridient in db.Ingridients on singleDishList.IngridientId equals ingridient.Id
-                //               select new
-                //               {
-                //                   ID = singleDishList.Id,
-                //                   DishTitle = dish.Title,
-                //                   IngridietnTitle = ingridient.Title,
-                //                   CountOfIngridients = singleDishList.Count
-                //               };
 
-                var dishes = db.Dishes.Select(p => new
+                //Выборка для списка блюд 
+                var dishList = from dish in db.Dishes
+                               join singleDishList in db.DishLists on dish.Id equals singleDishList.DishId
+                               join ingridient in db.Ingridients on singleDishList.IngridientId equals ingridient.Id
+                               select new DishListItem
+                               {
+                                   ID = singleDishList.Id,
+                                   DishTitle = dish.Title,
+                                   IngridietnTitle = ingridient.Title,
+                                   CountOfIngridients = singleDishList.Count,
+                                   Status = dish.Status
+                               };
+
+                var dishes = db.Dishes.Select(p => new DishListInfo
                 {
+                    ID = p.Id,
                     Title = p.Title,
                     Weight = p.Weight,
                     Kcal = p.KiloCalories,
@@ -57,100 +68,58 @@ namespace RestarauntApp
                 }
                 );
 
-                listBoxes.Add(ListBox1);
-                listBoxes.Add(ListBox2);
-                listBoxes.Add(ListBox3);
-                listBoxes.Add(ListBox4);
-                listBoxes.Add(ListBox5);
-                listBoxes.Add(ListBox6);
-                int indexer = 0;
-                foreach (var d in dishes)
+                foreach (var dish in dishes.ToArray().Where(d => d.Status == true))
                 {
-
-                    if (listBoxes[indexer].Items.Count < 4)
-                    {
-                        listBoxes[indexer].Items.Add($"Название: {d.Title}");
-                        listBoxes[indexer].Items.Add($"Вес: {d.Weight} грамм");
-                        listBoxes[indexer].Items.Add($"ККАЛ: {d.Kcal}");
-                        listBoxes[indexer].Items.Add($"БЖУ: {d.Proteins} {d.Fats} {d.Cabohydrates}");
-                    }
-
-                    if (indexer <= listBoxes.Count)
-                    {
-                        indexer++;
-                    }
-
+                    aprovedDishesCollection.Add(dish);
                 }
-                for (int i = 0; i < listBoxes.Count; i++)
+                foreach (var dish in dishes.ToArray().Where(d => d.Status == false))
                 {
-                    if (listBoxes[i].Items.Count < 4)
-                    {
-                        if (listBoxes[i] != null)
-                        {
-                            AprovedPanel.Children.Remove(listBoxes[i]);
-                            if (listBoxes[i] != null)
-                            {
-                                NotAprovedPanel.Children.Remove(listBoxes[i]);
-                            }
-                        }
-
-                    }
-
+                    notAprovedDishesCollection.Add(dish);
                 }
+                AprovedDishesListBox.ItemsSource = aprovedDishesCollection;
+                NotAprovedDishesListBox.ItemsSource = notAprovedDishesCollection;
+
             }
 
 
 
         }
 
-        private void onRightButton(object sender, RoutedEventArgs e)
+        private void OnRightButton(object sender, RoutedEventArgs e)
         {
-            int indexer = 0;
 
-            foreach (var l in listBoxes)
+            using (RestarauntContext db = new RestarauntContext())
             {
 
-
-                if (listBoxes[indexer].SelectedItem != null && listBoxes[indexer].Parent != NotAprovedPanel)
+                if (AprovedDishesListBox.SelectedItems.Count == 1)
                 {
+                    DishListInfo dishToMove = (DishListInfo)AprovedDishesListBox.Items[AprovedDishesListBox.SelectedIndex];
 
-                    AprovedPanel.Children.Remove(listBoxes[indexer]);
-                    NotAprovedPanel.Children.Add(listBoxes[indexer]);
-                    listBoxes[indexer].SelectedItem = null;
+                    aprovedDishesCollection.RemoveAt(AprovedDishesListBox.SelectedIndex);
+                    var dishToChange = db.Dishes.FirstOrDefault(d => d.Id == dishToMove.ID);
+                    dishToChange.Status = false;
+                    db.SaveChanges();
+                    notAprovedDishesCollection.Add(dishToMove);
 
                 }
-                if (indexer <= listBoxes.Count)
-                {
-                    indexer++;
-                }
-
-
             }
-
-
         }
 
-        private void onLeftButton(object sender, RoutedEventArgs e)
+        private void OnLeftButton(object sender, RoutedEventArgs e)
         {
-            int indexer = listBoxes.Count - 1;
-
-            foreach (var l in listBoxes)
+            using (RestarauntContext db = new RestarauntContext())
             {
-
-
-                if (listBoxes[indexer].SelectedItem != null && listBoxes[indexer].Parent != AprovedPanel)
+                if (NotAprovedDishesListBox.SelectedItems.Count == 1)
                 {
-                    NotAprovedPanel.Children.Remove(listBoxes[indexer]);
-                    AprovedPanel.Children.Add(listBoxes[indexer]);
-                    listBoxes[indexer].SelectedItem = null;
+                    DishListInfo dishToMove = (DishListInfo)NotAprovedDishesListBox.Items[NotAprovedDishesListBox.SelectedIndex];
+
+                    notAprovedDishesCollection.RemoveAt(NotAprovedDishesListBox.SelectedIndex);
+                    var dishToChange = db.Dishes.FirstOrDefault(d => d.Id == dishToMove.ID);
+                    dishToChange.Status = true;
+                    db.SaveChanges();
+                    aprovedDishesCollection.Add(dishToMove);
 
                 }
-                if (indexer >= 0)
-                {
-                    indexer--;
-                }
-
-
             }
         }
 
@@ -159,31 +128,113 @@ namespace RestarauntApp
             NavigationService.Navigate(PageController.IngridientCreationPage, UriKind.Relative);
         }
 
-        private void OnEditButton(object sender, RoutedEventArgs e)
+        private void OnEditIngridientButton(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(PageController.IngridientCreationPage, UriKind.Relative);
         }
-
-        private void OnDeleteButton(object sender, RoutedEventArgs e)
+        
+        private void OnDeleteDishButton(object sender, RoutedEventArgs e)
         {
-            foreach (var l in listBoxes) 
+            using (RestarauntContext db = new RestarauntContext())
             {
-                if(l.SelectedItem != null && l.Parent == NotAprovedPanel) 
+                if (NotAprovedDishesListBox.SelectedItems.Count == 1)
                 {
-                    NotAprovedPanel.Children.Remove(l);
-                }
-                else if (l.SelectedItem != null && l.Parent == AprovedPanel)
-                {
-                    AprovedPanel.Children.Remove(l);
-                }
+                    if (CanDelete())
+                    {
+                        DishListInfo dishToDelete = (DishListInfo)NotAprovedDishesListBox.Items[NotAprovedDishesListBox.SelectedIndex];
+                        notAprovedDishesCollection.Remove(dishToDelete);
+                        db.SaveChanges();
+                        var findedDishLists = db.DishLists.Where(d => d.DishId == dishToDelete.ID).ToArray();
+                        if (findedDishLists != null)
+                        {
+                            foreach (var dish in findedDishLists)
+                            {
+                                db.DishLists.Remove(dish);
+                            }
+                            db.SaveChanges();
+                        }
 
+                        var findedDishes = db.Dishes.Where(d => d.Id == dishToDelete.ID).ToList();
+                        if (findedDishes != null)
+                        {
+                            foreach (var dish in findedDishes)
+                            {
+                                db.Dishes.Remove(dish);
+                            }
+                            db.SaveChanges();
+                        }
+                    }
+                }
+                else if(AprovedDishesListBox.SelectedItems.Count == 1) 
+                {
+                    MessageBox.Show("Блюдо можно удалить только из неутвержденных");
+                }
             }
         }
-
-        private void OnOpenIngridientsList(object sender, RoutedEventArgs e)
+        private bool CanDelete() 
         {
-            NavigationService.Navigate(PageController.IngridientsListPage, UriKind.Relative);
+          CheckDeletingWindow checkDeletingWindow = new CheckDeletingWindow();
+          checkDeletingWindow.ShowDialog();
+            if (checkDeletingWindow.DialogResult == true)
+            {
+               return true;
+            }
+            else 
+            {
+                return false;
+            }
             
+        }
+        private void OnEditDishButton(object sender, RoutedEventArgs e)
+        {
+            if (AprovedDishesListBox.SelectedItem != null)
+            {
+                PageController.SendDishListInfo((DishListInfo)AprovedDishesListBox.SelectedItem);
+                NavigationService.Navigate(PageController.EditDish, UriKind.Relative);
+            }
+            else if(NotAprovedDishesListBox.SelectedItem != null) 
+            {
+                PageController.SendDishListInfo((DishListInfo)NotAprovedDishesListBox.SelectedItem);
+                NavigationService.Navigate(PageController.EditDish, UriKind.Relative);
+            }
+
+            
+        }
+
+        private void OnCreateDishButton(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(PageController.DishCreationPage, UriKind.Relative);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
+        private void AprovedDishesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (AprovedDishesListBox.Tag?.ToString() == "busy") return;
+            NotAprovedDishesListBox.Tag = "busy";
+            NotAprovedDishesListBox.SelectedIndex = -1;
+            NotAprovedDishesListBox.Tag = null;
+            //if (NotAprovedDishesListBox.SelectedItem != null)
+            //{
+            //    NotAprovedDishesListBox.SelectedItem = null;
+            //}
+        }
+
+        private void NotAprovedDishesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (NotAprovedDishesListBox.Tag?.ToString() == "busy") return;
+            AprovedDishesListBox.Tag = "busy";
+            AprovedDishesListBox.SelectedIndex = -1;
+            AprovedDishesListBox.Tag = null;
+            //if (AprovedDishesListBox.SelectedItem != null)
+            //{
+            //    AprovedDishesListBox.SelectedItem = null;
+            //}
         }
     }
 }

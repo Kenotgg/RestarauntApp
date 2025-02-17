@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace RestarauntApp
 {
@@ -12,29 +13,54 @@ namespace RestarauntApp
         private static IngridientCreationPage _ingridientCreationPage = null!;
         public static IngridientCreationPage IngridientCreationPage
         {
-            get 
+            get
             {
-                if(_ingridientCreationPage == null) 
+                if (_ingridientCreationPage == null)
                 {
                     _ingridientCreationPage = new IngridientCreationPage();
                 }
+                _ingridientCreationPage.ClearData();
                 return _ingridientCreationPage;
             }
-            
+
         }
 
 
-        private static IngridientsListPage _ingridientsListPage = null!;
-        public static IngridientsListPage IngridientsListPage
+        private static DishCreationPage _dishCreationPage = null!;
+        public static DishCreationPage DishCreationPage
         {
             get
             {
-                if (_ingridientsListPage == null)
+                if (_dishCreationPage == null) 
                 {
-                    _ingridientsListPage = new IngridientsListPage();
+                    _dishCreationPage = new DishCreationPage();
                 }
-                return _ingridientsListPage;
+                _dishCreationPage.ClearData();
+                _dishCreationPage.LoadData();
+                return _dishCreationPage;
+                
             }
         }
+        public static DishListInfo _dishListInfo = null!;
+        public static void SendDishListInfo(DishListInfo dishListInfo) 
+        {
+            _dishListInfo = dishListInfo;
+        }
+       
+        private static EditDish _editDish = null!;
+        public static EditDish EditDish 
+        {
+            get
+            {
+                if (_editDish == null)
+                {
+                    _editDish = new EditDish();
+                   
+                }
+                _editDish.LoadData();
+                return _editDish;
+            }
+        }
+
     }
 }

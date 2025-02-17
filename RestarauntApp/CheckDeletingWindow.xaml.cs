@@ -10,19 +10,24 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace RestarauntApp
 {
     /// <summary>
-    /// Логика взаимодействия для IngridientsListPage.xaml
+    /// Логика взаимодействия для CheckDeletingWindow.xaml
     /// </summary>
-    public partial class IngridientsListPage : Page
+    public partial class CheckDeletingWindow : Window
     {
-        public IngridientsListPage()
+        public CheckDeletingWindow()
         {
             InitializeComponent();
         }
+
+        private void Accept_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
+        }
+
     }
 }

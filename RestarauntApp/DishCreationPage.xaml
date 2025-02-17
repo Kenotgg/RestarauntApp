@@ -1,0 +1,102 @@
+﻿<Page x:Class="RestarauntApp.DishCreationPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:RestarauntApp"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="DishCreationPage">
+
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="0.25*"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            
+            <ColumnDefinition Width = "1.2*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <StackPanel Grid.Column="0">
+            <Label FontSize="16" FontWeight="DemiBold" Content="Все ингридиенты:"></Label>
+            <ListBox Margin="10" Height="320" x:Name="IngridentsBox">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+
+
+                        <StackPanel Margin="5">
+                            <TextBlock FontSize="16" Text="{Binding Path=Title}" HorizontalAlignment="Left" FontWeight="DemiBold" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="16" Text="Б:"></TextBlock>
+                                <TextBlock FontSize="16" Text="{Binding Path=Proteins}" HorizontalAlignment="Center" />
+                                <TextBlock FontSize="16" Text=" Ж:"></TextBlock>
+                                <TextBlock FontSize="16" Text="{Binding Path=Fats}" HorizontalAlignment="Center" />
+                                <TextBlock FontSize="16" Text=" У:"></TextBlock>
+                                <TextBlock FontSize="16" Text="{Binding Path=Carbohydrates}" HorizontalAlignment="Center" />
+                            </StackPanel>
+
+                        </StackPanel>
+
+
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            
+        </StackPanel>
+        <StackPanel Grid.Column="2">
+            <Label FontWeight="DemiBold" FontSize="16" Content="Добавленные ингридиенты:"></Label>
+            <ListBox Margin="10" Height="320" x:Name="AddedIngridentsBox">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+
+
+                        <StackPanel Margin="5">
+                            <TextBlock FontSize="16" Text="{Binding Path=Title}" HorizontalAlignment="Left" FontWeight="DemiBold" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontSize="16" Text="Б:"></TextBlock>
+                                <TextBlock FontSize="16" Text="{Binding Path=Proteins}" HorizontalAlignment="Center" />
+                                <TextBlock FontSize="16" Text=" Ж:"></TextBlock>
+                                <TextBlock FontSize="16" Text="{Binding Path=Fats}" HorizontalAlignment="Center" />
+                                <TextBlock FontSize="16" Text=" У:"></TextBlock>
+                                <TextBlock FontSize="16" Text="{Binding Path=Carbohydrates}" HorizontalAlignment="Center" />
+                            </StackPanel>
+
+                        </StackPanel>
+
+
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+        <StackPanel Grid.Column="4">
+            <Label FontWeight="DemiBold" FontSize="16" Content="Информация:"></Label>
+            <StackPanel Orientation="Horizontal">
+                <StackPanel>
+                    <Label Height="25" Content="Название"></Label>
+                    <Label Height="25" Content="Вес:"></Label>
+                    <Label Height="25" Content="ККАЛ:"/>
+                    <Label Height="25" Content="Б:"></Label>
+                    <Label Height="25" Content="Ж:"></Label>
+                    <Label Height="25" Content="У:"></Label>
+                </StackPanel>
+                <StackPanel Margin="0 5 0 0" Grid.Column="4">
+
+                    <TextBox HorizontalAlignment="Left" Height="25" Width="200" x:Name="NameInputBox"></TextBox>
+                    <TextBlock HorizontalAlignment="Left" Height="25" Width="200" x:Name="WeightInputBox"></TextBlock>
+                    <TextBlock HorizontalAlignment="Left" Height="25" Width="200" x:Name="KcalInputBox"/>
+                    <TextBlock HorizontalAlignment="Left" Height="25" Width="200" x:Name="PBox"></TextBlock>
+                    <TextBlock HorizontalAlignment="Left" Height="25" Width="200" x:Name="FBox"></TextBlock>
+                    <TextBlock HorizontalAlignment="Left" Height="25" Width="200" x:Name="CBox"></TextBlock>
+                   
+                </StackPanel>
+                
+            </StackPanel>
+            <Button Margin="5" Width="100" Content="Сохранить" Click="OnSaveDish"></Button>
+        </StackPanel>
+        <StackPanel VerticalAlignment="Center" Grid.Row="0" Grid.Column="1">
+            <Button Height="30" Margin="5" Content="▶" Click="OnAddToDish"></Button>
+            <Button Height="30" Margin="5" Content="◀" Click="OnClearAddedProducts" ></Button>
+        </StackPanel>
+       
+    </Grid>
+</Page>

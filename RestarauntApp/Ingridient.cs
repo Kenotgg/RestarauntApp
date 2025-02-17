@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace RestarauntApp
 {
-    public partial class Ingridient
+    public partial class Ingridient : INotifyPropertyChanged
     {
         public Ingridient()
         {
@@ -17,5 +20,12 @@ namespace RestarauntApp
         public int Carbohydrates { get; set; }
 
         public virtual ICollection<DishList> DishLists { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
     }
 }
