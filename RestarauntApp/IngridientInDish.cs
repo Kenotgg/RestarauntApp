@@ -10,9 +10,13 @@ namespace RestarauntApp
     {
         public int DishID { get; set; }
         public int IngridientID { get; set;}
-        public string IngridientName { get; set;}
+        public string Title { get; set;}
+        public int? Weight { get; set; }
+        public int Kcal { get; set; }
         public int Proteins { get; set;}
         public int Fats { get; set;}
         public int Carbohydrates { get; set;}
+       
+       
     }
 }

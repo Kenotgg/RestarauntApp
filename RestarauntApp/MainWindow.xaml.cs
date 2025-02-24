@@ -20,7 +20,8 @@ namespace RestarauntApp
     /// </summary>
     public partial class MainWindow : Window
     {
-       
+        //Scaffold-DbContext "Server=DESKTOP-932LPHA\\SQLEXPRESS;Database=Restaraunt;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer
+        //"Server=DESKTOP-932LPHA\\SQLEXPRESS;Database=Restaraunt;Trusted_Connection=True;"
         public MainWindow()
         {
             InitializeComponent();

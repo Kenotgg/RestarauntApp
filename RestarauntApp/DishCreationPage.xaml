@@ -19,7 +19,7 @@
         
         <StackPanel Grid.Column="0">
             <Label FontSize="16" FontWeight="DemiBold" Content="Все ингридиенты:"></Label>
-            <ListBox Margin="10" Height="320" x:Name="IngridentsBox">
+            <ListBox Margin="10" Height="300" x:Name="IngridentsBox">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
 
@@ -33,6 +33,7 @@
                                 <TextBlock FontSize="16" Text="{Binding Path=Fats}" HorizontalAlignment="Center" />
                                 <TextBlock FontSize="16" Text=" У:"></TextBlock>
                                 <TextBlock FontSize="16" Text="{Binding Path=Carbohydrates}" HorizontalAlignment="Center" />
+                                
                             </StackPanel>
 
                         </StackPanel>
@@ -45,11 +46,9 @@
         </StackPanel>
         <StackPanel Grid.Column="2">
             <Label FontWeight="DemiBold" FontSize="16" Content="Добавленные ингридиенты:"></Label>
-            <ListBox Margin="10" Height="320" x:Name="AddedIngridentsBox">
+            <ListBox Margin="10" Height="300" x:Name="AddedIngridentsBox" SelectionChanged="AddedIngridentsBox_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-
-
                         <StackPanel Margin="5">
                             <TextBlock FontSize="16" Text="{Binding Path=Title}" HorizontalAlignment="Left" FontWeight="DemiBold" />
                             <StackPanel Orientation="Horizontal">
@@ -59,14 +58,19 @@
                                 <TextBlock FontSize="16" Text="{Binding Path=Fats}" HorizontalAlignment="Center" />
                                 <TextBlock FontSize="16" Text=" У:"></TextBlock>
                                 <TextBlock FontSize="16" Text="{Binding Path=Carbohydrates}" HorizontalAlignment="Center" />
+                                <!--<TextBlock FontSize="16" Text=" Вес:"></TextBlock>
+                                <TextBlock FontSize="16" Text="{Binding Path=Weight}" HorizontalAlignment="Center" />-->
                             </StackPanel>
-
                         </StackPanel>
-
-
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Введите вес инридиента:"></Label>
+                <TextBox x:Name="WeightInputBox" Margin="0 5 0 0" Text="{Binding Path=Weight}" MinWidth="25" MaxWidth="100"></TextBox>
+                <Button Click="OnSaveWeight" Content="✔"></Button>
+            </StackPanel>
+            
         </StackPanel>
         <StackPanel Grid.Column="4">
             <Label FontWeight="DemiBold" FontSize="16" Content="Информация:"></Label>
@@ -82,8 +86,8 @@
                 <StackPanel Margin="0 5 0 0" Grid.Column="4">
 
                     <TextBox HorizontalAlignment="Left" Height="25" Width="200" x:Name="NameInputBox"></TextBox>
-                    <TextBlock HorizontalAlignment="Left" Height="25" Width="200" x:Name="WeightInputBox"></TextBlock>
-                    <TextBlock HorizontalAlignment="Left" Height="25" Width="200" x:Name="KcalInputBox"/>
+                    <TextBlock HorizontalAlignment="Left" Height="25" Width="200" x:Name="WeightShowBox"></TextBlock>
+                    <TextBlock HorizontalAlignment="Left" Height="25" Width="200" x:Name="KcalShowBox"/>
                     <TextBlock HorizontalAlignment="Left" Height="25" Width="200" x:Name="PBox"></TextBlock>
                     <TextBlock HorizontalAlignment="Left" Height="25" Width="200" x:Name="FBox"></TextBlock>
                     <TextBlock HorizontalAlignment="Left" Height="25" Width="200" x:Name="CBox"></TextBlock>

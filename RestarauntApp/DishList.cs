@@ -9,7 +9,7 @@ namespace RestarauntApp
         public int DishId { get; set; }
         public int IngridientId { get; set; }
         public int Count { get; set; }
-
+        public int? Weight { get; set; }
         public virtual Dish Dish { get; set; } = null!;
         public virtual Ingridient Ingridient { get; set; } = null!;
     }

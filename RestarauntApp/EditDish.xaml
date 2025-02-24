@@ -35,7 +35,7 @@
             <StackPanel Name="MainStackPanel">
                 <TextBox Height="25" Width="300" Name="TitleBox" Text="{Binding Path=Title}"></TextBox>
                 <TextBox Height="25" HorizontalAlignment="Left" Width="100" Name="KcalBox" Text="{Binding Path=Kcal}"></TextBox>
-                <TextBox Height="25" HorizontalAlignment="Left"  Width="100" Name="WeightBox" Text="{Binding Path=Kcal}"></TextBox>
+                <TextBox Height="25" HorizontalAlignment="Left"  Width="100" Name="WeightBox" Text="{Binding Path=Weight}"></TextBox>
                 <TextBox Height="25" HorizontalAlignment="Left"  Width="100" Name="ProteinsBox" Text="{Binding Path=Proteins}"></TextBox>
                 <TextBox Height="25" HorizontalAlignment="Left"  Width="100" Name="FatsBox" Text = "{Binding Path=Fats}"></TextBox>
                 <TextBox Height="25" HorizontalAlignment="Left"  Width="100" Name="CarbohydratesBox" Text="{Binding Path=Cabohydrates}"></TextBox>
@@ -81,6 +81,9 @@
                                 <TextBlock FontSize="16" Text="{Binding Path=Fats}" HorizontalAlignment="Center" />
                                 <TextBlock FontSize="16" Text=" У:"></TextBlock>
                                 <TextBlock FontSize="16" Text="{Binding Path=Carbohydrates}" HorizontalAlignment="Center" />
+                                <TextBlock FontSize="16" Text=" Вес:"></TextBlock>
+                                <TextBlock FontSize="16" Text="{Binding Path=Weight}" HorizontalAlignment="Center" />
+                                
                             </StackPanel>
                         </StackPanel>
                     </DataTemplate>

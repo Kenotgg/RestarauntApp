@@ -11,7 +11,7 @@ namespace RestarauntApp
     /// </summary>
     public partial class EditDish : Page, INotifyPropertyChanged
     {
-        ObservableCollection<Ingridient> addedIngridientsCollection = new ObservableCollection<Ingridient>();
+        ObservableCollection<IngridientInDish> addedIngridientsCollection = new ObservableCollection<IngridientInDish>();
         ObservableCollection<Ingridient> notAddedIngridientsCollection = new ObservableCollection<Ingridient>();
         public EditDish()
         {
@@ -36,11 +36,22 @@ namespace RestarauntApp
                 foreach (var dishList in ingridentsInDish)
                 {
                     var ing = db.Ingridients.Find(dishList.IngridientId);
-                    if (ing != null) 
+                    if (ing != null)
                     {
-                        addedIngridientsCollection.Add(ing);
+                        var ingIndish = new IngridientInDish
+                        {
+                            DishID = dishList.DishId,
+                            IngridientID = dishList.IngridientId,
+                            Title = ing.Title,
+                            Proteins = ing.Proteins,
+                            Fats = ing.Fats,
+                            Carbohydrates = ing.Carbohydrates,
+                            Weight = dishList.Weight
+
+                        };
+                        addedIngridientsCollection.Add(ingIndish);
                     }
-                    
+
                 }
                
                 AddedProductBox.ItemsSource = addedIngridientsCollection;
@@ -89,25 +100,26 @@ namespace RestarauntApp
 
         private void OnAddProductToDish(object sender, RoutedEventArgs e)
         {
-            if (ProductBox.SelectedItem is Ingridient ingridient) 
-            {
-                using (RestarauntContext db = new RestarauntContext())
-                {
-                    DishList dishList = new DishList 
-                    {
-                        DishId = PageController._dishListInfo.ID,
-                        IngridientId = ingridient.Id,
-                        Count = 1
-                    };
-                    addedIngridientsCollection.Add(ingridient);
-                    db.DishLists.Add(dishList);
-                    db.SaveChanges();
-                    MessageBox.Show("Добавлено: " + ingridient.Title);
-                }
-                   
-            }
-                
-            
+            //if (ProductBox.SelectedItem is Ingridient ingridient)
+            //{
+            //    using (RestarauntContext db = new RestarauntContext())
+            //    {
+            //        DishList dishList = new DishList
+            //        {
+            //            DishId = PageController._dishListInfo.ID,
+            //            IngridientId = ingridient.Id,
+            //            Count = 1
+            //        };
+
+            //        addedIngridientsCollection.Add(dishList);
+            //        db.DishLists.Add(dishList);
+            //        db.SaveChanges();
+            //        MessageBox.Show("Добавлено: " + ingridient.Title);
+            //    }
+
+            //}
+
+
         }
 
         private void OnRemoveProductFromDish(object sender, RoutedEventArgs e)
@@ -122,7 +134,7 @@ namespace RestarauntApp
                         db.DishLists.Remove(dish);
                     }
                     db.SaveChanges();
-                    addedIngridientsCollection.Remove(selectedIngridient);
+                    //addedIngridientsCollection.Remove(dishToRemove.First());
                 }
             }
         }

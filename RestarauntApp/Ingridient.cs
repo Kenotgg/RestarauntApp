@@ -18,7 +18,7 @@ namespace RestarauntApp
         public int Proteins { get; set; }
         public int Fats { get; set; }
         public int Carbohydrates { get; set; }
-
+        public int? Weight { get; set; }
         public virtual ICollection<DishList> DishLists { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
