@@ -26,19 +26,20 @@ namespace RestarauntApp
     /// </summary>
     public partial class DishCreationPage : Page,INotifyPropertyChanged
     {
+       
+       
+        private Dictionary<IngridientInDish, int> _ingridientWeights = new Dictionary<IngridientInDish, int>();
+        private ObservableCollection<IngridientInDish> addedIngridients = new ObservableCollection<IngridientInDish>();
+        public List<DishList> dishListsToAdd = new List<DishList>();
+        private DishList selectedIngridient = new DishList();
         int weight = 0;
         int proteinsCount = 0;
         int fatsCount = 0;
         int carbohydratesCount = 0;
         float Kcal = 0;
-        DishList selectedIngridient = new DishList();
-        private Dictionary<Ingridient, int> _ingridientWeights = new Dictionary<Ingridient, int>();
-        public ObservableCollection<Ingridient> addedIngridients = new ObservableCollection<Ingridient>();
-        public List<DishList> dishListsToAdd = new List<DishList>();
         public DishCreationPage()
         {
             InitializeComponent();
-            
         }
 
         public void LoadData() 
@@ -46,9 +47,8 @@ namespace RestarauntApp
             using (RestarauntContext db = new RestarauntContext())
             {
                 DataContext = this;
-                IngridentsBox.ItemsSource = db.Ingridients.ToArray();
+                AllIngridentsBox.ItemsSource = db.Ingridients.ToArray();
                 AddedIngridentsBox.ItemsSource = addedIngridients;
-               
             }
         }
         private void UpdateInfo() 
@@ -59,38 +59,44 @@ namespace RestarauntApp
         {
             using (RestarauntContext db = new RestarauntContext())
             {
-                if (IngridentsBox.SelectedItem is Ingridient selIng && IngridentsBox.SelectedItem != null) 
+                if (AllIngridentsBox.SelectedItem is Ingridient selIng && AllIngridentsBox.SelectedItem != null) 
                 {
-                    
-                    Ingridient selectedIngridient = (Ingridient)IngridentsBox.SelectedItem;
-                    addedIngridients.Add(selectedIngridient);
-                    foreach (var ing in addedIngridients)
+                    Ingridient selectedIngridient = (Ingridient)AllIngridentsBox.SelectedItem;
+                    IngridientInDish addedIngridient = new IngridientInDish
                     {
-                        proteinsCount += ing.Proteins;
-                        PBox.Text = proteinsCount.ToString();
-                        fatsCount += ing.Fats;
-                        FBox.Text = fatsCount.ToString();
-                        carbohydratesCount += ing.Carbohydrates;
-                        CBox.Text = carbohydratesCount.ToString();
-                        Kcal = (int)(proteinsCount * 4 + carbohydratesCount * 4 + fatsCount * 9)/1000;
-                        KcalShowBox.Text = Kcal.ToString();
-                        if(ing.Weight != null) 
-                        {
-                            weight += int.Parse(ing.Weight.ToString());
-                            //MessageBox.Show(ing.Weight.ToString());
-                        }
-                        else 
-                        {
-                            weight += GetIngridientWeight(ing);
-                        }
-                        
-                        WeightShowBox.Text = weight.ToString();
+                        IngridientID = selectedIngridient.Id,
+                        Title = selectedIngridient.Title,
+                        Proteins = selectedIngridient.Proteins,
+                        Weight = selectedIngridient.Weight,
+                        Carbohydrates = selectedIngridient.Carbohydrates,
+                        Fats = selectedIngridient.Fats
+                    };
+                    addedIngridients.Add(addedIngridient);
+                    proteinsCount += (int)(addedIngridient.Proteins * addedIngridient.Weight / 100);
+                    PBox.Text = proteinsCount.ToString();
+                    fatsCount += (int)(addedIngridient.Fats * addedIngridient.Weight/100);
+                    FBox.Text = fatsCount.ToString();
+                    carbohydratesCount += (int)(addedIngridient.Carbohydrates * addedIngridient.Weight / 100);
+                    CBox.Text = carbohydratesCount.ToString();
+                    Kcal = (int)(proteinsCount * 4 + carbohydratesCount * 4 + fatsCount * 9);
+                    KcalShowBox.Text = Kcal.ToString();
+                    if (selectedIngridient.Weight != null)
+                    {
+                        weight += int.Parse(addedIngridient.Weight.ToString());
                     }
-                    
+                    else
+                    {
+                        weight += GetIngridientWeight(addedIngridient);
+                    }
+                    WeightShowBox.Text = weight.ToString();
                 }
             }
                 
         }
+
+
+      
+     
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -116,18 +122,22 @@ namespace RestarauntApp
                     return;
                 }
                 var dish = new Dish { Title = NameInputBox.Text, Weight = weight, Proteins = proteinsCount, Fats = fatsCount, Carbohydrates = carbohydratesCount, KiloCalories = (int)Kcal};
+                
+                var selectByDishId = db.DishLists.Where(d => d.Id == dish.Id);
+                db.DishLists.RemoveRange(selectByDishId);
+                db.SaveChanges();
                 db.Dishes.Add(dish);
                 db.SaveChanges();
                 foreach (var ing in addedIngridients)
                 {
                     if (ing.Weight == null) 
                     {
-                        db.DishLists.Add(new DishList { DishId = dish.Id, IngridientId = ing.Id, Weight = GetIngridientWeight(ing) });
+                        db.DishLists.Add(new DishList { DishId = dish.Id, IngridientId = ing.IngridientID, Weight = GetIngridientWeight(ing) });
                         db.SaveChanges();
                     }
                     else 
                     {
-                        db.DishLists.Add(new DishList { DishId = dish.Id, IngridientId = ing.Id, Weight = ing.Weight });
+                        db.DishLists.Add(new DishList { DishId = dish.Id, IngridientId = ing.IngridientID, Weight = ing.Weight });
                         db.SaveChanges();
                     }
 
@@ -159,6 +169,22 @@ namespace RestarauntApp
             weight = 0;
         }
 
+        public void ClearTextAndValues() 
+        {
+            carbohydratesCount = 0;
+            fatsCount = 0;
+            proteinsCount = 0;
+            Kcal = 0;
+            weight = 0;
+            NameInputBox.Text = null;
+            WeightShowBox.Text = null;
+            FBox.Text = null;
+            CBox.Text = null;
+            PBox.Text = null;
+            KcalShowBox.Text = null;
+           
+        }
+
         
         private void AddedIngridentsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -171,47 +197,57 @@ namespace RestarauntApp
             }
             
         }
-
+        int tempWeight = 0;
         private void OnSaveWeight(object sender, RoutedEventArgs e)
         {
-            if (AddedIngridentsBox.SelectedItem is Ingridient selectedIng)
+            using (RestarauntContext db = new RestarauntContext())
             {
-                if(int.TryParse(WeightInputBox.Text, out int a))
+                if (AddedIngridentsBox.SelectedItem is IngridientInDish selectedIng)
                 {
-                    Ingridient copiedIngridient = new Ingridient 
+                    if (int.TryParse(WeightInputBox.Text, out int a))
                     {
-                        Id = selectedIng.Id,
-                        Title = selectedIng.Title,
-                        Proteins = selectedIng.Proteins,
-                        Fats = selectedIng.Fats,
-                        Carbohydrates = selectedIng.Carbohydrates
-                    };
-                    int ingIndex = addedIngridients.IndexOf(selectedIng);
-                    addedIngridients[ingIndex] = copiedIngridient;
-                    //MessageBox.Show(copiedIngridient.Title.ToString());
-                    AddIngridientWeightToDictionary(copiedIngridient, int.Parse(WeightInputBox.Text));
-                    if (weight != null) 
-                    {
-                        weight -= Convert.ToInt32(selectedIng.Weight.ToString());
-                        weight += Convert.ToInt32(GetIngridientWeight(copiedIngridient).ToString());
-                        WeightShowBox.Text = weight.ToString();
-                        MessageBox.Show(GetIngridientWeight(copiedIngridient).ToString());
+                        IngridientInDish copiedIngridient = new IngridientInDish
+                        {
+                            IngridientID = selectedIng.IngridientID,
+                            Title = selectedIng.Title,
+                            Proteins = selectedIng.Proteins,
+                            Fats = selectedIng.Fats,
+                            Carbohydrates = selectedIng.Carbohydrates,
+                            Weight = Convert.ToInt32(WeightInputBox.Text)
+
+                        };
+                        int ingIndex = addedIngridients.IndexOf(selectedIng);
+                        addedIngridients[ingIndex] = copiedIngridient;
+                        AddIngridientWeightToDictionary(copiedIngridient, int.Parse(WeightInputBox.Text));
+                        if (selectedIng.Weight == 100)
+                        {
+                            weight -= Convert.ToInt32(selectedIng.Weight.ToString());
+                            weight += Convert.ToInt32(GetIngridientWeight(copiedIngridient).ToString());
+                            WeightShowBox.Text = weight.ToString();
+                            
+                            MessageBox.Show(GetIngridientWeight(copiedIngridient).ToString());
+                        }
+                        else
+                        {                     
+                           
+                            weight -= Convert.ToInt32(GetIngridientWeight(selectedIng).ToString());
+                            MessageBox.Show(GetIngridientWeight(selectedIng).ToString() + "убираем");
+                            weight += Convert.ToInt32(GetIngridientWeight(copiedIngridient).ToString());
+                            MessageBox.Show(GetIngridientWeight(copiedIngridient).ToString() + " добавляем");
+                            WeightShowBox.Text = weight.ToString();
+                            
+                            MessageBox.Show(weight + " общий вес");
+                          
+                        }
                     }
-                   
+                    else
+                    {
+                        MessageBox.Show("Некорректный ввод");
+                    }
                 }
-                else 
-                {
-                    MessageBox.Show("Некорректный ввод");
-                }
-                
-                //foreach (var item in addedIngridients)
-                //{
-                //    GetIngridientWeight(item);
-                //}
-                    
             }
         }
-        private void AddIngridientWeightToDictionary(Ingridient ingridient,int weight) 
+        private void AddIngridientWeightToDictionary(IngridientInDish ingridient,int weight) 
         {
             if (_ingridientWeights.ContainsKey(ingridient))
             {
@@ -226,7 +262,7 @@ namespace RestarauntApp
         }
 
         // 3. Метод для получения веса ингредиента из словаря
-        private int GetIngridientWeight(Ingridient ingridient)
+        private int GetIngridientWeight(IngridientInDish ingridient)
         {
             if (_ingridientWeights.ContainsKey(ingridient))
             {

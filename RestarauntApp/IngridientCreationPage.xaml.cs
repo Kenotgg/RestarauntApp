@@ -58,7 +58,7 @@ namespace RestarauntApp
                 }
                 if (canAdd)
                 {
-                    db.Ingridients.Add(new Ingridient { Title = ProductNameBox.Text, Proteins = Convert.ToInt32(ProteinBox.Text), Fats = Convert.ToInt32(FatsBox.Text), Carbohydrates = Convert.ToInt32(CarbohydratesBox.Text) });
+                    db.Ingridients.Add(new Ingridient { Title = ProductNameBox.Text, Proteins = Convert.ToInt32(ProteinBox.Text), Fats = Convert.ToInt32(FatsBox.Text), Carbohydrates = Convert.ToInt32(CarbohydratesBox.Text), Weight = 100 });
                     MessageBox.Show("Продукт был добавлен");
                 }
                 else 

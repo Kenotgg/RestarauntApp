@@ -6,6 +6,7 @@ namespace RestarauntApp
     public partial class DishList
     {
         public int Id { get; set; }
+        //public string Title { get; set; }
         public int DishId { get; set; }
         public int IngridientId { get; set; }
         public int Count { get; set; }

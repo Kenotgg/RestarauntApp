@@ -57,7 +57,7 @@ namespace RestarauntApp
                     _editDish = new EditDish();
                    
                 }
-                _editDish.LoadData();
+                _editDish.LoadIngridients();
                 return _editDish;
             }
         }

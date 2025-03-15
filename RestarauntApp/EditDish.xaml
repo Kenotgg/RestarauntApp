@@ -89,7 +89,14 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <Button Margin="0 5 5 0" HorizontalAlignment="Right" Width="120" Height="20" Click="OnSaveChanges" Content="Сохранить"></Button>
+            <StackPanel Orientation="Horizontal">
+                <StackPanel  Width="100" Orientation="Horizontal">
+                    <TextBox x:Name="WeightInputBox" Width="50"></TextBox>
+                    <Button Click="OnChangeProductWeight">✅</Button>
+                </StackPanel>
+                <Button Margin="20 5 5 0" HorizontalAlignment="Right" Width="120" Height="20" Click="OnSaveChanges" Content="Обновить"></Button>
+            </StackPanel>
+            
         </StackPanel>
 
 
